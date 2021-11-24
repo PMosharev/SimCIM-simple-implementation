@@ -18,7 +18,7 @@ def AdjMatrixFromFile(FileName):
     with open(FileName) as fil:
         n, m = [int(j) for j in fil.readline().split()]
         J = [[0 for i in range(n)] for j in range(n)]
-        #PrintMatrix(J)
+
         for k in range(m):
             vert1, vert2, weight = [int(j) for j in fil.readline().split()]
             J[vert1 - 1][vert2 - 1] = weight
@@ -59,6 +59,14 @@ def SetColors(x):
         else:
             Colors.append('blue')
     return Colors
+
+def CutValue(x, J, n):
+    Cut = 0.0
+    for i in range(n):
+        for j in range(i):
+           Cut += J[i][j] * (1 - x[i] * x[j])
+    Cut = Cut * 0.5
+    return Cut
 
 
 def CreateTexFile(Zita, NSteps, Noize, NumberOfFiles, FileNames, OutTexFileName):
