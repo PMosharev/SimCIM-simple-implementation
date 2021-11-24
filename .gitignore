@@ -1,2 +1,7 @@
 *.png
 __pycache__
+*.tex
+*.log
+*.gz
+*.pdf
+*.aux
