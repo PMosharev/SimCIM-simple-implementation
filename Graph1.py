@@ -3,6 +3,7 @@ import math
 import random
 from GraphOperations import *
 import time
+import copy
 
 
 
@@ -61,7 +62,6 @@ FileNames.append('./Data/G22.txt')
 
 for FileName in FileNames:
     
-    
     with open(FileName) as fil:
         n, m = [int(j) for j in fil.readline().split()]
         
@@ -77,10 +77,20 @@ for FileName in FileNames:
     time3 = time.time()
     
     x = Algor(x, J, n, NSteps, Zita, Noize, Nu0)
-    #RandX = [random.choice([-1, 1]) for j in range(n)]
-    Jnew = ModifyMatrix(J,x)
-    Cut = CutValue(x, J, n)
-    #RandomCut = CutValue(RandX, J, n)
+
+    Jnew = copy.deepcopy(J)
+    for i in range(len(x)):
+        for j in range(i):
+            if x[i] != x[j]:
+                Jnew[i][j] = 0
+                Jnew[j][i] = 0
+    
+    Cut = 0.0
+    for i in range(n):
+        for j in range(i):
+           Cut += J[i][j] * (1 - x[i] * x[j])
+    Cut = Cut * 0.5
+
     print('Source file: ', FileName)
 
     print('Cut Value =', Cut)
