@@ -45,20 +45,39 @@ def Algor(x, J, n, NSteps, Zita, Noize, Nu0):
 Zita = - 0.05
 NSteps = 1000
 Noize = 0.05
-Nu0 = 0.5
+Nu0 = 0.7
 
-print('Number of steps = ', NSteps, '\n')
+print('Number of steps = ', NSteps)
+print('Zita = ', Zita)
+print('Noize parameter = ', Noize)
+print('Nu0 = ', Nu0, '\n')
 
 
-NumberOfFiles = 3
+Res = open('Results.txt', 'a')
+Res.write('================================================================ \n')
+Res.write('Number of steps = ' + str(NSteps) + '\n')
+Res.write('Zita = ' + str(Zita) + '\n')
+Res.write('Noize parameter = ' + str(Noize) + '\n')
+Res.write('Nu0 = ' + str(Nu0) + '\n')
+
+Res.write('\n')
+    
+
+NumberOfFiles = 5
 FileNames = []
-##
+
 ##for i in range(NumberOfFiles):
 ##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
-FileNames.append('./Data/G39.txt')
+
 FileNames.append('./Data/G1.txt')
+FileNames.append('./Data/G2.txt')
+FileNames.append('./Data/G7.txt')
 FileNames.append('./Data/G22.txt')
+FileNames.append('./Data/G39.txt')
+
+
+
 
 for FileName in FileNames:
     
@@ -73,6 +92,12 @@ for FileName in FileNames:
             J[vert2 - 1][vert1 - 1] = weight
             
     x = [0 for j in range(n)]
+
+    print('Source file: ', FileName)
+    print('Work started')
+    Res.write('Source file: ' + FileName + '\n')
+    
+
 
     time3 = time.time()
     
@@ -91,21 +116,25 @@ for FileName in FileNames:
            Cut += J[i][j] * (1 - x[i] * x[j])
     Cut = Cut * 0.5
 
-    print('Source file: ', FileName)
-
-    print('Cut Value =', Cut)
-
     time4 = time.time()
-    print(time4 - time3)
-    #print('Cut Value for random cut = ', RandomCut)
+
+    
+    print('Cut Value =', Cut)
+    Res.write('Cut Value =' + str(Cut) + '\n')
+    
+    print('Time spent: ', time4 - time3)
+    Res.write('Time spent: ' + str(time4 - time3) + '\n')
+    Res.write('\n \n')
+    
     print()
+
+
+Res.close()
 ##    SourceImageName = './Out/Source' + str(i+1) + '.png'
 ##    ResultImageName = './Out/Result' + str(i+1) + '.png'
 ##    ImageGraph(nx.DiGraph(np.matrix(J)), SetColors(x), SourceImageName)
 ##    ImageGraph(nx.DiGraph(np.matrix(Jnew)), SetColors(x), ResultImageName)
         
 
-#OutTexFileName = './Out/OutTexFile.tex'
 
-#CreateTexFile(Zita, NSteps, Noize, NumberOfFiles, FileNames, OutTexFileName)
 

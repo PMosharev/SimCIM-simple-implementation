@@ -1,0 +1,125 @@
+================================================================Number of steps = 1000Zita = -0.07Noize parameter = 0.05Nu0 = 0.7
+Source file: ./Data/G1.txtCut Value =11535.0Time spent: 8.393260955810547
+ 
+Source file: ./Data/G2.txtCut Value =11562.0Time spent: 7.990698337554932
+ 
+Source file: ./Data/G7.txtCut Value =1931.0Time spent: 7.61332893371582
+ 
+Source file: ./Data/G22.txtCut Value =13263.0Time spent: 215.372793674469
+ 
+Source file: ./Data/G39.txtCut Value =2285.0Time spent: 246.47365736961365
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.07
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txtCut Value =11547.0
+Time spent: 8.239675760269165
+
+ 
+Source file: ./Data/G2.txtCut Value =11536.0
+Time spent: 8.772887945175171
+
+ 
+Source file: ./Data/G7.txtCut Value =1941.0
+Time spent: 7.841522455215454
+
+ 
+Source file: ./Data/G22.txtCut Value =13267.0
+Time spent: 222.63218760490417
+
+ 
+Source file: ./Data/G39.txtCut Value =2283.0
+Time spent: 247.75279569625854
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.04
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txtCut Value =11546.0
+Time spent: 15.861052989959717
+
+ 
+Source file: ./Data/G2.txtCut Value =11535.0
+Time spent: 15.689597845077515
+
+ 
+Source file: ./Data/G7.txtCut Value =1952.0
+Time spent: 15.343267440795898
+
+ 
+Source file: ./Data/G22.txtCut Value =13180.0
+Time spent: 257.34319162368774
+
+ 
+Source file: ./Data/G39.txtCut Value =2306.0
+Time spent: 263.7586064338684
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.01
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txt
+Cut Value =11158.0
+Time spent: 19.82034659385681
+
+ 
+Source file: ./Data/G2.txt
+Cut Value =11136.0
+Time spent: 19.77049422264099
+
+ 
+Source file: ./Data/G7.txt
+Cut Value =1446.0
+Time spent: 19.370203733444214
+
+ 
+Source file: ./Data/G22.txt
+Cut Value =11942.0
+Time spent: 289.4703345298767
+
+ 
+Source file: ./Data/G39.txt
+Cut Value =1418.0
+Time spent: 287.64740347862244
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.1
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txt
+Cut Value =11499.0
+Time spent: 4.136492967605591
+
+ 
+Source file: ./Data/G2.txt
+Cut Value =11520.0
+Time spent: 4.072458028793335
+
+ 
+Source file: ./Data/G7.txt
+Cut Value =1854.0
+Time spent: 4.032950401306152
+
+ 
+Source file: ./Data/G22.txt
+Cut Value =13259.0
+Time spent: 124.34598469734192
+
+ 
+Source file: ./Data/G39.txt
+Cut Value =2314.0
+Time spent: 213.4755048751831
+
+ 
