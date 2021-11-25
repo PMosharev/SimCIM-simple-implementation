@@ -1,4 +1,4 @@
-# Graph-Exercises
+# SimCIM
 
 Simple implementation of SimCIM algorythm attempting to solve Max-Cut graph partitioning problem. 
 Mathematical description is given in https://arxiv.org/pdf/1901.08927.pdf
