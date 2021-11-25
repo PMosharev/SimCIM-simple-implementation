@@ -48,7 +48,7 @@ def Algor(x, J, n, NSteps, Zeta, Noize, Nu0):
 
 Zeta = - 0.05
 NSteps = 1000
-Noize = 0.05
+Noize = 0.005
 Nu0 = 0.5
 
 print('Number of steps = ', NSteps)
@@ -69,7 +69,7 @@ Res.write('\n')
 
 FileNames = []   
 
-# Uncomment this to try program on small graphs. (Set Noise = 0.000005 for better results in this case)
+# Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
 
 ##NumberOfFiles = 6
 ##for i in range(NumberOfFiles):
