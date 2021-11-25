@@ -48,7 +48,7 @@ def Algor(x, J, n, NSteps, Zeta, Noize, Nu0):
 
 Zeta = - 0.05
 NSteps = 1000
-Noize = 0.000005
+Noize = 0.05
 Nu0 = 0.5
 
 print('Number of steps = ', NSteps)
@@ -71,15 +71,15 @@ FileNames = []
 
 # Uncomment this to try program on small graphs. (Set Noise = 0.000005 for better results in this case)
 
-NumberOfFiles = 6
-for i in range(NumberOfFiles):
-    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+##NumberOfFiles = 6
+##for i in range(NumberOfFiles):
+##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
-#FileNames.append('./Data/G1.txt')
+FileNames.append('./Data/G1.txt')
 #FileNames.append('./Data/G2.txt')
 #FileNames.append('./Data/G7.txt')
-#FileNames.append('./Data/G22.txt')
+FileNames.append('./Data/G22.txt')
 #FileNames.append('./Data/G39.txt')
 
 
@@ -100,8 +100,10 @@ for FileName in FileNames:
     x = [0 for j in range(n)]
 
     print('Source file: ', FileName)
+    print('Number of vertices = ', n)
     print('Work started')
     Res.write('Source file: ' + FileName + '\n')
+    Res.write('Number of vertices: ' + str(n) + '\n')
     
 
 
@@ -126,13 +128,14 @@ for FileName in FileNames:
 
     
     print('Cut Value =', Cut)    
-    print('Time spent: ', round(time4 - time3, 6), ' seconds')
+    print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
+
 
     Res.write('Cut Value =' + str(Cut) + '\n')
     Res.write('Time spent: ' + str(round(time4 - time3, 6)) + ' seconds' + '\n')
     Res.write('\n \n')
     
-    print()
+
 
     if n < 50: # Draw images for small graph
 
@@ -155,11 +158,11 @@ for FileName in FileNames:
         nx.draw(nx.DiGraph(np.matrix(Jnew)), node_color = Colors, with_labels=True)
         plt.savefig(ResultImageName)
         plt.clf()
+
+        
         
 
         
-
-
 Res.close()
 
         
