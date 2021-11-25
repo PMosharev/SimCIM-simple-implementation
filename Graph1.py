@@ -1,20 +1,24 @@
+import networkx as nx
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 import random
-from GraphOperations import *
+
 import time
 import copy
 
+# implementation of SimCIM algorythm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
 
 
-
-def Algor(x, J, n, NSteps, Zita, Noize, Nu0):
+def Algor(x, J, n, NSteps, Zeta, Noize, Nu0):
     for t in range(NSteps):
-        Nu = Nu0*math.tanh(t / n * 6 - 3)
+        
+        Nu = Nu0*math.tanh(t / n * 6 - 3)     # pump-loss factor, Fig2 (b) in the article
 
         for i in range(n):
 
             if x[i] != 1 and x[i] != -1:
+                
                 f = Noize*np.random.normal()
                 
                 Displacement = 0
@@ -22,7 +26,7 @@ def Algor(x, J, n, NSteps, Zita, Noize, Nu0):
                 for j in range(n):
                     Displacement += J[i][j]*x[j]
                 
-                Deltaxi = Nu * x[i] + Zita * Displacement + f
+                Deltaxi = Nu * x[i] + Zeta * Displacement + f     # Equation (5) in the article
 
                 if x[i] + Deltaxi >= 1:
                     x[i] = 1
@@ -42,13 +46,13 @@ def Algor(x, J, n, NSteps, Zita, Noize, Nu0):
 
 
 
-Zita = - 0.05
+Zeta = - 0.05
 NSteps = 1000
-Noize = 0.00005
+Noize = 0.000005
 Nu0 = 0.5
 
 print('Number of steps = ', NSteps)
-print('Zita = ', Zita)
+print('Zeta = ', Zeta)
 print('Noize parameter = ', Noize)
 print('Nu0 = ', Nu0, '\n')
 
@@ -56,16 +60,18 @@ print('Nu0 = ', Nu0, '\n')
 Res = open('Results.txt', 'a')
 Res.write('================================================================ \n')
 Res.write('Number of steps = ' + str(NSteps) + '\n')
-Res.write('Zita = ' + str(Zita) + '\n')
+Res.write('Zeta = ' + str(Zeta) + '\n')
 Res.write('Noize parameter = ' + str(Noize) + '\n')
 Res.write('Nu0 = ' + str(Nu0) + '\n')
 
 Res.write('\n')
-    
+
+
+FileNames = []   
+
+# Uncomment this to try program on small graphs. (Set Noise = 0.000005 for better results in this case)
 
 NumberOfFiles = 6
-FileNames = []
-
 for i in range(NumberOfFiles):
     FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
@@ -75,7 +81,6 @@ for i in range(NumberOfFiles):
 #FileNames.append('./Data/G7.txt')
 #FileNames.append('./Data/G22.txt')
 #FileNames.append('./Data/G39.txt')
-#FileNames.append('./Data/SimpleGraph3.txt')
 
 
 
@@ -102,7 +107,7 @@ for FileName in FileNames:
 
     time3 = time.time()
     
-    x = Algor(x, J, n, NSteps, Zita, Noize, Nu0)
+    x = Algor(x, J, n, NSteps, Zeta, Noize, Nu0)
 
     Jnew = copy.deepcopy(J)
     for i in range(len(x)):
@@ -121,19 +126,37 @@ for FileName in FileNames:
 
     
     print('Cut Value =', Cut)    
-    print('Time spent: ', time4 - time3)
+    print('Time spent: ', round(time4 - time3, 6), ' seconds')
 
     Res.write('Cut Value =' + str(Cut) + '\n')
-    Res.write('Time spent: ' + str(time4 - time3) + '\n')
+    Res.write('Time spent: ' + str(round(time4 - time3, 6)) + ' seconds' + '\n')
     Res.write('\n \n')
     
     print()
 
-    if n < 50:
-        SourceImageName = './Out/' + FileName[7:-4] + 'Source' + '.png'
-        ResultImageName = './Out/' + FileName[7:-4] + 'Result' + '.png'
-        ImageGraph(nx.DiGraph(np.matrix(J)), SetColors(x), SourceImageName)
-        ImageGraph(nx.DiGraph(np.matrix(Jnew)), SetColors(x), ResultImageName)
+    if n < 50: # Draw images for small graph
+
+        Colors = []
+        for i in x:
+            if i == -1:
+                Colors.append('red')
+            elif i == 1:
+                Colors.append('green')
+            else:
+                Colors.append('blue')
+
+        SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
+        nx.draw(nx.DiGraph(np.matrix(J)), node_color = Colors, with_labels=True)
+        plt.savefig(SourceImageName)
+        plt.clf()
+        
+        
+        ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
+        nx.draw(nx.DiGraph(np.matrix(Jnew)), node_color = Colors, with_labels=True)
+        plt.savefig(ResultImageName)
+        plt.clf()
+        
+
         
 
 
