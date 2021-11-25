@@ -44,8 +44,8 @@ def Algor(x, J, n, NSteps, Zita, Noize, Nu0):
 
 Zita = - 0.05
 NSteps = 1000
-Noize = 0.05
-Nu0 = 0.7
+Noize = 0.00005
+Nu0 = 0.5
 
 print('Number of steps = ', NSteps)
 print('Zita = ', Zita)
@@ -63,18 +63,19 @@ Res.write('Nu0 = ' + str(Nu0) + '\n')
 Res.write('\n')
     
 
-NumberOfFiles = 5
+NumberOfFiles = 6
 FileNames = []
 
-##for i in range(NumberOfFiles):
-##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+for i in range(NumberOfFiles):
+    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
-FileNames.append('./Data/G1.txt')
-FileNames.append('./Data/G2.txt')
-FileNames.append('./Data/G7.txt')
-FileNames.append('./Data/G22.txt')
-FileNames.append('./Data/G39.txt')
+#FileNames.append('./Data/G1.txt')
+#FileNames.append('./Data/G2.txt')
+#FileNames.append('./Data/G7.txt')
+#FileNames.append('./Data/G22.txt')
+#FileNames.append('./Data/G39.txt')
+#FileNames.append('./Data/SimpleGraph3.txt')
 
 
 
@@ -119,21 +120,25 @@ for FileName in FileNames:
     time4 = time.time()
 
     
-    print('Cut Value =', Cut)
-    Res.write('Cut Value =' + str(Cut) + '\n')
-    
+    print('Cut Value =', Cut)    
     print('Time spent: ', time4 - time3)
+
+    Res.write('Cut Value =' + str(Cut) + '\n')
     Res.write('Time spent: ' + str(time4 - time3) + '\n')
     Res.write('\n \n')
     
     print()
 
+    if n < 50:
+        SourceImageName = './Out/' + FileName[7:-4] + 'Source' + '.png'
+        ResultImageName = './Out/' + FileName[7:-4] + 'Result' + '.png'
+        ImageGraph(nx.DiGraph(np.matrix(J)), SetColors(x), SourceImageName)
+        ImageGraph(nx.DiGraph(np.matrix(Jnew)), SetColors(x), ResultImageName)
+        
+
 
 Res.close()
-##    SourceImageName = './Out/Source' + str(i+1) + '.png'
-##    ResultImageName = './Out/Result' + str(i+1) + '.png'
-##    ImageGraph(nx.DiGraph(np.matrix(J)), SetColors(x), SourceImageName)
-##    ImageGraph(nx.DiGraph(np.matrix(Jnew)), SetColors(x), ResultImageName)
+
         
 
 

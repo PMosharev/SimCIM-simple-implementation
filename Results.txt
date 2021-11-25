@@ -123,3 +123,204 @@ Cut Value =2314.0
 Time spent: 213.4755048751831
 
  
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txt
+Cut Value =11565.0
+Time spent: 14.480544328689575
+
+ 
+Source file: ./Data/G2.txt
+Cut Value =11567.0
+Time spent: 14.595550537109375
+
+ 
+Source file: ./Data/G7.txt
+Cut Value =1974.0
+Time spent: 13.970518827438354
+
+ 
+Source file: ./Data/G22.txt
+Cut Value =13268.0
+Time spent: 251.70429730415344
+
+ 
+Source file: ./Data/G39.txt
+Cut Value =2327.0
+Time spent: 264.40625834465027
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/G1.txt
+Cut Value =11598.0
+Time spent: 14.281773805618286
+
+ 
+Source file: ./Data/G2.txt
+Cut Value =11558.0
+Time spent: 14.592063903808594
+
+ 
+Source file: ./Data/G7.txt
+Cut Value =1971.0
+Time spent: 14.049458026885986
+
+ 
+Source file: ./Data/SimpleGraph3.txt
+Cut Value =4.0
+Time spent: 0.001842498779296875
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 0.05
+Nu0 = 0.7
+
+Source file: ./Data/SimpleGraph1.txt
+Cut Value =0.0
+Time spent: 0.0004639625549316406
+
+ 
+Source file: ./Data/SimpleGraph2.txt
+Cut Value =2.0
+Time spent: 0.0004956722259521484
+
+ 
+Source file: ./Data/SimpleGraph3.txt
+Cut Value =4.0
+Time spent: 0.0006029605865478516
+
+ 
+Source file: ./Data/SimpleGraph4.txt
+Cut Value =4.0
+Time spent: 0.0007750988006591797
+
+ 
+Source file: ./Data/SimpleGraph5.txt
+Cut Value =5.0
+Time spent: 0.0012006759643554688
+
+ 
+Source file: ./Data/SimpleGraph6.txt
+Cut Value =13.0
+Time spent: 0.0028405189514160156
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 0.05
+Nu0 = 0.5
+
+Source file: ./Data/SimpleGraph1.txt
+Cut Value =1.0
+Time spent: 0.0004382133483886719
+
+ 
+Source file: ./Data/SimpleGraph2.txt
+Cut Value =2.0
+Time spent: 0.0008401870727539062
+
+ 
+Source file: ./Data/SimpleGraph3.txt
+Cut Value =4.0
+Time spent: 0.0006966590881347656
+
+ 
+Source file: ./Data/SimpleGraph4.txt
+Cut Value =5.0
+Time spent: 0.0012536048889160156
+
+ 
+Source file: ./Data/SimpleGraph5.txt
+Cut Value =5.0
+Time spent: 0.001352071762084961
+
+ 
+Source file: ./Data/SimpleGraph6.txt
+Cut Value =16.0
+Time spent: 0.0029413700103759766
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 0.0005
+Nu0 = 0.5
+
+Source file: ./Data/SimpleGraph1.txt
+Cut Value =1.0
+Time spent: 0.0005035400390625
+
+ 
+Source file: ./Data/SimpleGraph2.txt
+Cut Value =2.0
+Time spent: 0.0005846023559570312
+
+ 
+Source file: ./Data/SimpleGraph3.txt
+Cut Value =5.0
+Time spent: 0.0007722377777099609
+
+ 
+Source file: ./Data/SimpleGraph4.txt
+Cut Value =5.0
+Time spent: 0.0009570121765136719
+
+ 
+Source file: ./Data/SimpleGraph5.txt
+Cut Value =10.0
+Time spent: 0.0015993118286132812
+
+ 
+Source file: ./Data/SimpleGraph6.txt
+Cut Value =18.0
+Time spent: 0.003783702850341797
+
+ 
+================================================================ 
+Number of steps = 1000
+Zita = -0.05
+Noize parameter = 5e-05
+Nu0 = 0.5
+
+Source file: ./Data/SimpleGraph1.txt
+Cut Value =1.0
+Time spent: 0.00048351287841796875
+
+ 
+Source file: ./Data/SimpleGraph2.txt
+Cut Value =2.0
+Time spent: 0.0006382465362548828
+
+ 
+Source file: ./Data/SimpleGraph3.txt
+Cut Value =4.0
+Time spent: 0.0008630752563476562
+
+ 
+Source file: ./Data/SimpleGraph4.txt
+Cut Value =4.0
+Time spent: 0.001033782958984375
+
+ 
+Source file: ./Data/SimpleGraph5.txt
+Cut Value =10.0
+Time spent: 0.0017948150634765625
+
+ 
+Source file: ./Data/SimpleGraph6.txt
+Cut Value =18.0
+Time spent: 0.004133939743041992
+
+ 

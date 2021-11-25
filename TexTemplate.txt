@@ -1,9 +1,0 @@
-\documentclass[5pt]{article}
-\usepackage[14pt]{extsizes}
-\usepackage[cp1251]{inputenc}
-\usepackage[english,russian]{babel}
-\usepackage{graphicx}
-\usepackage[scale={0.8,0.8}]{geometry}
-
-
-\begin{document}
