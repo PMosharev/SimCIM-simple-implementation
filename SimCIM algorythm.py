@@ -10,41 +10,6 @@ import copy
 # implementation of SimCIM algorythm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
 
 
-def Algor(x, J, n, NSteps, Zeta, Noize, Nu0):
-    for t in range(NSteps):
-        
-        Nu = Nu0*math.tanh(t / n * 6 - 3)     # pump-loss factor, Fig2 (b) in the article
-
-        for i in range(n):
-
-            if x[i] != 1 and x[i] != -1:
-                
-                f = Noize*np.random.normal()
-                
-                Displacement = 0
-                
-                for j in range(n):
-                    Displacement += J[i][j]*x[j]
-                
-                Deltaxi = Nu * x[i] + Zeta * Displacement + f     # Equation (5) in the article
-
-                if x[i] + Deltaxi >= 1:
-                    x[i] = 1
-                elif x[i] + Deltaxi <= -1:
-                    x[i] = -1
-                else:
-                    x[i] += Deltaxi
-
-    for i in range(n):
-        if x[i] < 0:
-            x[i] = -1
-        else:
-            x[i] = 1
-
-    return x
-
-
-
 
 Zeta = - 0.05
 NSteps = 1000
@@ -70,17 +35,17 @@ Res.write('\n')
 FileNames = []   
 
 # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
-
+##
 ##NumberOfFiles = 6
 ##for i in range(NumberOfFiles):
 ##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
 FileNames.append('./Data/G1.txt')
-#FileNames.append('./Data/G2.txt')
-#FileNames.append('./Data/G7.txt')
+FileNames.append('./Data/G2.txt')
+FileNames.append('./Data/G7.txt')
 FileNames.append('./Data/G22.txt')
-#FileNames.append('./Data/G39.txt')
+FileNames.append('./Data/G39.txt')
 
 
 
@@ -90,14 +55,15 @@ for FileName in FileNames:
     with open(FileName) as fil:
         n, m = [int(j) for j in fil.readline().split()]
         
-        J = [[0 for i in range(n)] for j in range(n)]
+        J = np.zeros(shape = (n,n), dtype = int)
 
         for k in range(m):
             vert1, vert2, weight = [int(j) for j in fil.readline().split()]
             J[vert1 - 1][vert2 - 1] = weight
             J[vert2 - 1][vert1 - 1] = weight
-            
-    x = [0 for j in range(n)]
+
+                
+    x = np.zeros(shape = (n))
 
     print('Source file: ', FileName)
     print('Number of vertices = ', n)
@@ -109,7 +75,35 @@ for FileName in FileNames:
 
     time3 = time.time()
     
-    x = Algor(x, J, n, NSteps, Zeta, Noize, Nu0)
+
+    for t in range(NSteps):
+
+        Nu = Nu0*math.tanh(t / n * 6 - 3)      # pump-loss factor, Fig2 (b) in the article
+
+        fgen = (np.random.normal() for i in range(n))
+        f = np.fromiter(fgen, float)
+        f *= Noize
+
+
+        Displacement = x.dot(J)
+  
+        
+        x += Nu * x + Zeta * Displacement + f
+
+
+        for i in range(n):     # can I get rid of such direct elementwise checking?
+            if x[i] >= 1:
+                x[i] = 1
+            elif x[i] <= -1:
+                x[i] = -1
+
+
+##    for i in range(n):
+##        if x[i] < 0:
+##            x[i] = -1
+##        else:
+##            x[i] = 1
+    
 
     Jnew = copy.deepcopy(J)
     for i in range(len(x)):
