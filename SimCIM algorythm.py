@@ -36,16 +36,16 @@ FileNames = []
 
 # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
 ##
-##NumberOfFiles = 6
-##for i in range(NumberOfFiles):
-##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+NumberOfFiles = 6
+for i in range(NumberOfFiles):
+    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
-FileNames.append('./Data/G1.txt')
-FileNames.append('./Data/G2.txt')
-FileNames.append('./Data/G7.txt')
-FileNames.append('./Data/G22.txt')
-FileNames.append('./Data/G39.txt')
+##FileNames.append('./Data/G1.txt')
+##FileNames.append('./Data/G2.txt')
+##FileNames.append('./Data/G7.txt')
+##FileNames.append('./Data/G22.txt')
+##FileNames.append('./Data/G39.txt')
 
 
 
@@ -63,7 +63,7 @@ for FileName in FileNames:
             J[vert2 - 1][vert1 - 1] = weight
 
                 
-    x = np.zeros(shape = (n))
+    x = np.zeros(n)
 
     print('Source file: ', FileName)
     print('Number of vertices = ', n)
@@ -78,7 +78,9 @@ for FileName in FileNames:
 
     for t in range(NSteps):
 
-        Nu = Nu0*math.tanh(t / n * 6 - 3)      # pump-loss factor, Fig2 (b) in the article
+        Nu = Nu0*(math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
+
+        #print(Nu)
 
         fgen = (np.random.normal() for i in range(n))
         f = np.fromiter(fgen, float)
@@ -86,9 +88,12 @@ for FileName in FileNames:
 
 
         Displacement = x.dot(J)
+
+        
   
         
-        x += Nu * x + Zeta * Displacement + f
+        x += Nu * x +  Zeta * Displacement + f
+
 
 
         for i in range(n):     # can I get rid of such direct elementwise checking?
