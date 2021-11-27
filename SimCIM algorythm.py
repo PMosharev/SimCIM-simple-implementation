@@ -36,9 +36,9 @@ FileNames = []
 
 # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
 ##
-NumberOfFiles = 6
-for i in range(NumberOfFiles):
-    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+##NumberOfFiles = 6
+##for i in range(NumberOfFiles):
+##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
 ##FileNames.append('./Data/G1.txt')
@@ -46,6 +46,12 @@ for i in range(NumberOfFiles):
 ##FileNames.append('./Data/G7.txt')
 ##FileNames.append('./Data/G22.txt')
 ##FileNames.append('./Data/G39.txt')
+
+
+
+FileNames.append('./Data/SyntheticGraph1.txt')
+
+
 
 
 
@@ -61,6 +67,8 @@ for FileName in FileNames:
             vert1, vert2, weight = [int(j) for j in fil.readline().split()]
             J[vert1 - 1][vert2 - 1] = weight
             J[vert2 - 1][vert1 - 1] = weight
+
+
 
                 
     x = np.zeros(n)
@@ -78,36 +86,36 @@ for FileName in FileNames:
 
     for t in range(NSteps):
 
-        Nu = Nu0*(math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
+        Nu = Nu0*(1 - math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
 
         #print(Nu)
 
         fgen = (np.random.normal() for i in range(n))
-        f = np.fromiter(fgen, float)
-        f *= Noize
-
+        f = np.fromiter(fgen, float) * Noize
+        
+        
 
         Displacement = x.dot(J)
 
-        
-  
+
         
         x += Nu * x +  Zeta * Displacement + f
 
 
 
         for i in range(n):     # can I get rid of such direct elementwise checking?
-            if x[i] >= 1:
+            if x[i] > 1:
                 x[i] = 1
-            elif x[i] <= -1:
+            elif x[i] < -1:
                 x[i] = -1
 
 
-##    for i in range(n):
-##        if x[i] < 0:
-##            x[i] = -1
-##        else:
-##            x[i] = 1
+    for i in range(n):
+        if x[i] < 0:
+            x[i] = -1
+        else:
+            x[i] = 1
+
     
 
     Jnew = copy.deepcopy(J)
@@ -136,7 +144,7 @@ for FileName in FileNames:
     
 
 
-    if n < 50: # Draw images for small graph
+    if n < 500: # Draw images for small graph
 
         Colors = []
         for i in x:
@@ -148,13 +156,15 @@ for FileName in FileNames:
                 Colors.append('blue')
 
         SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
-        nx.draw(nx.DiGraph(np.matrix(J)), node_color = Colors, with_labels=True)
+        GSource = nx.DiGraph(np.matrix(J))
+        nx.draw(GSource, pos = nx.circular_layout(GSource), node_color = Colors, with_labels=True)
         plt.savefig(SourceImageName)
         plt.clf()
         
         
         ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
-        nx.draw(nx.DiGraph(np.matrix(Jnew)), node_color = Colors, with_labels=True)
+        GResult = nx.DiGraph(np.matrix(Jnew))
+        nx.draw(GResult, pos = nx.spring_layout(GResult), node_color = Colors, with_labels=True)
         plt.savefig(ResultImageName)
         plt.clf()
 
