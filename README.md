@@ -6,4 +6,3 @@ and https://arxiv.org/pdf/1302.5843.pdf
 
 Use "SimCIM algorythm.py" file to try how it works.
 
-The other .py file is made just to try some graph operations.
