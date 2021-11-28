@@ -16,7 +16,7 @@ NSteps = 1000
 Noize = 0.005
 Nu0 = - 0.5
 
-Ab = 0.3
+Ab = 1
 
 
 MaxCut = False
@@ -43,9 +43,9 @@ FileNames = []
 
 # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
 ##
-NumberOfFiles = 6
-for i in range(NumberOfFiles):
-    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+##NumberOfFiles = 6
+##for i in range(NumberOfFiles):
+##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
 ##FileNames.append('./Data/G1.txt')
@@ -56,11 +56,9 @@ for i in range(NumberOfFiles):
 
 
 
-#FileNames.append('./Data/SyntheticGraph1.txt')
-
-#FileNames.append('./Data/SyntheticGraph2.txt')
-
-#FileNames.append('./Data/SyntheticGraph3.txt')
+FileNames.append('./Data/SyntheticGraph1.txt')
+FileNames.append('./Data/SyntheticGraph2.txt')
+FileNames.append('./Data/SyntheticGraph3.txt')
 
 
 for FileName in FileNames:
@@ -104,7 +102,7 @@ for FileName in FileNames:
         if MaxCut == True:
             Displacement = x.dot(J)
         else:
-            Displacement = x.dot(- J + 2 * Ab)
+            Displacement = x.dot(- J + 20 / n * Ab)
 
 
         
@@ -155,11 +153,11 @@ for FileName in FileNames:
     
     print('Cut Value =', Cut)
     if MinusClusterPower != 0:
-        print('Balance value ', round(PlusClusterPower/MinusClusterPower, 2))
-        Res.write('Balance value ' + str(round(PlusClusterPower/MinusClusterPower, 2)) + '\n')
+        print('Balance value (1 is perfect) ', round(PlusClusterPower/MinusClusterPower, 2))
+        Res.write('Balance value (1 is perfect) ' + str(round(PlusClusterPower/MinusClusterPower, 2)) + '\n')
     else:
-        print('Balance value ', round(PlusClusterPower, 2))
-        Res.write('Balance value ' + str(round(PlusClusterPower, 2)) + '\n')
+        print('Balance value (1 is perfect) ', round(PlusClusterPower, 2))
+        Res.write('Balance value (1 is perfect) ' + str(round(PlusClusterPower, 2)) + '\n')
     print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
 
 
@@ -184,7 +182,7 @@ for FileName in FileNames:
         SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
         GSource = nx.Graph(np.matrix(J))
         plt.figure(figsize = (n // 3 + 5, n // 3 + 5))
-        nx.draw(GSource, pos = nx.circular_layout(GSource), node_color = Colors, with_labels=True)
+        nx.draw(GSource, pos = nx.circular_layout(GSource), with_labels=True)
         plt.savefig(SourceImageName)
         plt.clf()
 
