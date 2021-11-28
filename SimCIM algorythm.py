@@ -49,11 +49,11 @@ FileNames = []
 
 
 
-FileNames.append('./Data/SyntheticGraph1.txt')
+#FileNames.append('./Data/SyntheticGraph1.txt')
 
+#FileNames.append('./Data/SyntheticGraph2.txt')
 
-
-
+FileNames.append('./Data/SyntheticGraph3.txt')
 
 
 for FileName in FileNames:
@@ -144,7 +144,7 @@ for FileName in FileNames:
     
 
 
-    if n < 500: # Draw images for small graph
+    if n < 201: # Draw images for small graph
 
         Colors = []
         for i in x:
@@ -156,14 +156,15 @@ for FileName in FileNames:
                 Colors.append('blue')
 
         SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
-        GSource = nx.DiGraph(np.matrix(J))
+        GSource = nx.Graph(np.matrix(J))
+        plt.figure(figsize = (n // 3 + 5, n // 3 + 5))
         nx.draw(GSource, pos = nx.circular_layout(GSource), node_color = Colors, with_labels=True)
         plt.savefig(SourceImageName)
         plt.clf()
         
         
         ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
-        GResult = nx.DiGraph(np.matrix(Jnew))
+        GResult = nx.Graph(np.matrix(Jnew))
         nx.draw(GResult, pos = nx.spring_layout(GResult), node_color = Colors, with_labels=True)
         plt.savefig(ResultImageName)
         plt.clf()

@@ -3,12 +3,12 @@ import os
 
 NGraphs = 10
 
-n = int(input('Введите число вершин графа ') or '30')
+n = int(input('Введите число вершин графа ') or '200')
 
 m1 = int(input('Введите минимальную степень вершины ') or '1')
 m2 = int(input('Введите максимальную степень вершины ') or '5')
 
-iGraph = 1
+iGraph = 3
 
 FileName = './Data/SyntheticGraphTmp' + str(iGraph) + '.txt'
 
