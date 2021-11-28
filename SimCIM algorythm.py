@@ -16,13 +16,18 @@ NSteps = 1000
 Noize = 0.005
 Nu0 = 0.5
 
+MaxCut = False
+
+if MaxCut != True:
+    Ab = 0.2
+
 print('Number of steps = ', NSteps)
 print('Zeta = ', Zeta)
 print('Noize parameter = ', Noize)
 print('Nu0 = ', Nu0, '\n')
 
 
-Res = open('Results.txt', 'a')
+Res = open('./Results/Results.txt', 'a')
 Res.write('================================================================ \n')
 Res.write('Number of steps = ' + str(NSteps) + '\n')
 Res.write('Zeta = ' + str(Zeta) + '\n')
@@ -93,9 +98,11 @@ for FileName in FileNames:
         fgen = (np.random.normal() for i in range(n))
         f = np.fromiter(fgen, float) * Noize
         
-        
 
-        Displacement = x.dot(J)
+        if MaxCut == True:
+            Displacement = x.dot(J)
+        else:
+            Displacement = x.dot(- 0.5 * J + Ab)
 
 
         
@@ -169,6 +176,8 @@ for FileName in FileNames:
         plt.savefig(ResultImageName)
         plt.clf()
 
+        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Original' + '.gexf')
+        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Result' + '.gexf')
         
         
 
