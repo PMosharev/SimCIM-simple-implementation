@@ -14,12 +14,14 @@ import copy
 Zeta = - 0.05
 NSteps = 1000
 Noize = 0.005
-Nu0 = 0.5
+Nu0 = - 0.5
 
-MaxCut = True
+Ab = 0.3
 
-if MaxCut != True:
-    Ab = 0.2
+
+MaxCut = False
+
+
 
 print('Number of steps = ', NSteps)
 print('Zeta = ', Zeta)
@@ -41,9 +43,9 @@ FileNames = []
 
 # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
 ##
-##NumberOfFiles = 6
-##for i in range(NumberOfFiles):
-##    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+NumberOfFiles = 6
+for i in range(NumberOfFiles):
+    FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
 ##FileNames.append('./Data/G1.txt')
@@ -58,7 +60,7 @@ FileNames = []
 
 #FileNames.append('./Data/SyntheticGraph2.txt')
 
-FileNames.append('./Data/SyntheticGraph3.txt')
+#FileNames.append('./Data/SyntheticGraph3.txt')
 
 
 for FileName in FileNames:
@@ -102,7 +104,7 @@ for FileName in FileNames:
         if MaxCut == True:
             Displacement = x.dot(J)
         else:
-            Displacement = x.dot(- 0.5 * J + Ab)
+            Displacement = x.dot(- J + 2 * Ab)
 
 
         
@@ -152,12 +154,17 @@ for FileName in FileNames:
 
     
     print('Cut Value =', Cut)
-    print('Balance value ', round(PlusClusterPower/MinusClusterPower, 2))
+    if MinusClusterPower != 0:
+        print('Balance value ', round(PlusClusterPower/MinusClusterPower, 2))
+        Res.write('Balance value ' + str(round(PlusClusterPower/MinusClusterPower, 2)) + '\n')
+    else:
+        print('Balance value ', round(PlusClusterPower, 2))
+        Res.write('Balance value ' + str(round(PlusClusterPower, 2)) + '\n')
     print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
 
 
     Res.write('Cut Value =' + str(Cut) + '\n')
-    Res.write('Balance value ' + str(round(PlusClusterPower/MinusClusterPower, 2)) + '\n')
+    
     Res.write('Time spent: ' + str(round(time4 - time3, 6)) + ' seconds' + '\n')
     Res.write('\n \n')
     
@@ -180,6 +187,8 @@ for FileName in FileNames:
         nx.draw(GSource, pos = nx.circular_layout(GSource), node_color = Colors, with_labels=True)
         plt.savefig(SourceImageName)
         plt.clf()
+
+                
         
 
         if MaxCut == True:
