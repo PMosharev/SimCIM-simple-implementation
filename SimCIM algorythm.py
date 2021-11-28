@@ -16,7 +16,7 @@ NSteps = 1000
 Noize = 0.005
 Nu0 = 0.5
 
-MaxCut = False
+MaxCut = True
 
 if MaxCut != True:
     Ab = 0.2
@@ -138,14 +138,26 @@ for FileName in FileNames:
            Cut += J[i][j] * (1 - x[i] * x[j])
     Cut = Cut * 0.5
 
+    MinusClusterPower = 0
+    PlusClusterPower = 0
+    for i in x:
+        if i == 1:
+            PlusClusterPower += 1
+        elif i == -1:
+            MinusClusterPower += 1
+    
+   
+
     time4 = time.time()
 
     
-    print('Cut Value =', Cut)    
+    print('Cut Value =', Cut)
+    print('Balance value ', round(PlusClusterPower/MinusClusterPower, 2))
     print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
 
 
     Res.write('Cut Value =' + str(Cut) + '\n')
+    Res.write('Balance value ' + str(round(PlusClusterPower/MinusClusterPower, 2)) + '\n')
     Res.write('Time spent: ' + str(round(time4 - time3, 6)) + ' seconds' + '\n')
     Res.write('\n \n')
     
@@ -169,8 +181,11 @@ for FileName in FileNames:
         plt.savefig(SourceImageName)
         plt.clf()
         
-        
-        ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
+
+        if MaxCut == True:
+            ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
+        else:
+            ResultImageName = './Images/' + FileName[7:-4] + '_Result_MinCut' + '.png'
         GResult = nx.Graph(np.matrix(Jnew))
         nx.draw(GResult, pos = nx.spring_layout(GResult), node_color = Colors, with_labels=True)
         plt.savefig(ResultImageName)
