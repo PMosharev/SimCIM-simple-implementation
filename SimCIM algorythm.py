@@ -28,14 +28,14 @@ def UploadGraph(FileName, WeightedVertices = False):
         if WeightedVertices:
             for i in range(n):
                 _, G.nodes[i]['weight'] = [int(j) for j in fil.readline().split()]
+        else:
+            for i in range(n):
+                G.nodes[i]["weight"] = 1
 
     return n, G
 
                 
-
-                    
-
-                    
+               
 
 
 
@@ -65,7 +65,7 @@ def SimCIM(J,n, NSteps = 1000, Nu0 = -0.5, Zeta = -0.05, Noize = 0.005):
         fgen = (np.random.normal() for i in range(n))
         f = np.fromiter(fgen, float) * Noize
         
-        x += Nu * x +  Zeta * np.dot(x, J.A) + f
+        x += Nu * x +  Zeta * np.dot(J.A, x) + f
 
         for i in range(n):     # can I get rid of such direct elementwise checking?
             if x[i] > 1:
@@ -86,12 +86,11 @@ def MaxCut(G, n):
     J = nx.adjacency_matrix(G)    
     return SimCIM(J, n)
 
-def MinCut(G, n, Ab = 3):
+def MinCut(G, n, Ab = 20):
     J = nx.adjacency_matrix(G)
     V = np.array([i[1] for i in G.nodes(data = "weight")])
     
-    print(V)
-    return SimCIM(- J.T + V * Ab , n)
+    return SimCIM(- J + V * Ab / n , n)
     
 
 
@@ -117,13 +116,13 @@ FileNames = []
 ##FileNames.append('./Data/G2.txt')
 ##FileNames.append('./Data/G7.txt')
 ##FileNames.append('./Data/G22.txt')
-##FileNames.append('./Data/G39.txt')
+#FileNames.append('./Data/G39.txt')
 
 
 
-#FileNames.append('./Data/SyntheticGraph1.txt')
-#FileNames.append('./Data/SyntheticGraph2.txt')
-#FileNames.append('./Data/SyntheticGraph3.txt')
+##FileNames.append('./Data/SyntheticGraph1.txt')
+##FileNames.append('./Data/SyntheticGraph2.txt')
+##FileNames.append('./Data/SyntheticGraph3.txt')
 
 FileNames.append('./Data/SimpleWeightedGraph.txt')
 
@@ -154,12 +153,16 @@ for FileName in FileNames:
         for j in range(i):
             if x[i] != x[j] and (i, j) in NewGraph.edges:                
                 NewGraph.remove_edge(j, i)
-                Cut += 1
+                Cut += G.edges[i, j]['weight']
 
     PlusClusterPower = 0
-    for i in x:
-        if i == 1:
-            PlusClusterPower += 1
+    SumOfWeights = 0
+
+    for i in G.nodes(data = "weight"):
+        SumOfWeights += i[1]
+        if x[i[0]] == 1:
+            PlusClusterPower += i[1]
+    BalanceValue = PlusClusterPower/SumOfWeights
         
     
    
@@ -169,8 +172,8 @@ for FileName in FileNames:
     
     print('Cut Value =', Cut)
     
-    print('Balance value (0.5 is perfect) ', round(PlusClusterPower/n, 2))
-    Res.write('Balance value (0.5 is perfect) ' + str(round(PlusClusterPower/n, 2)) + '\n')
+    print('Balance value (0.5 is perfect) ', round(BalanceValue, 2))
+    Res.write('Balance value (0.5 is perfect) ' + str(round(BalanceValue, 2)) + '\n')
     
     print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
 
