@@ -10,19 +10,22 @@ import copy
 # implementation of SimCIM algorythm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
 
 class MyGraph:
-    def __init__(self):
+    def __init__(self, WeightedVertices = False):
 
-        self.J = np.zeros(shape = (0)) 
+        self.J = np.zeros(0)        
         
-        self.V = np.zeros(shape = (0))
+        self.V = np.zeros(0)
+        self.x = np.zeros(0)
             
-    def Upload(self, FileName, Weighted = False):
+    def Upload(self, FileName, WeightedVertices = False):
         with open(FileName) as fil:
             n, m = [int(j) for j in fil.readline().split()]
 
             self.n = n
             self.m = m
+
             
+            self.x = np.zeros(n)
             J = np.zeros(shape = (n,n), dtype = int)
 
             for i in range(m):
@@ -32,40 +35,101 @@ class MyGraph:
 
             self.J = J
 
-            if Weighted:
+            if WeightedVertices:
                 for i in range(n):
-                    _, V[i] = [int(j) for j in fil.readline().split()]
+                    _, self.V[i] = [int(j) for j in fil.readline().split()]
+            else:
+                self.V = np.ones(n)
+
+                    
+    def Draw(self, FileName, ):
+        Colors = []
+        for i in self.x:
+            if i == -1:
+                Colors.append('red')
+            elif i == 1:
+                Colors.append('green')
+            else:
+                Colors.append('blue')
+
+        SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
+        GSource = nx.Graph(np.matrix(self.J))
+        plt.figure(figsize = (self.n // 3 + 5, self.n // 3 + 5))
+        nx.draw(GSource, pos = nx.circular_layout(GSource), with_labels=True)
+        plt.savefig(SourceImageName)
+        plt.clf()              
+        
+
+        
+        ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
+        
+        GResult = nx.Graph(np.matrix(Jnew))
+        nx.draw(GResult, pos = nx.spring_layout(GResult), node_color = Colors, with_labels=True)
+        plt.savefig(ResultImageName)
+        plt.clf()
+
+        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Original' + '.gexf')
+        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Result' + '.gexf')
                     
 
 
 
 
-Zeta = - 0.05
-NSteps = 1000
-Noize = 0.005
-Nu0 = - 0.5
+def SimCIM(J, x, n, NSteps = 1000, Nu0 = -0.5, Zeta = -0.05, Noize = 0.005):
 
-Ab = 1
-
-
-MaxCut = False
+    print('Number of steps = ', NSteps)
+    print('Zeta = ', Zeta)
+    print('Noize parameter = ', Noize)
+    print('Nu0 = ', Nu0, '\n')
 
 
+    Res = open('./Results/Results.txt', 'a')
+    Res.write('================================================================ \n')
+    Res.write('Number of steps = ' + str(NSteps) + '\n')
+    Res.write('Zeta = ' + str(Zeta) + '\n')
+    Res.write('Noize parameter = ' + str(Noize) + '\n')
+    Res.write('Nu0 = ' + str(Nu0) + '\n')
+    Res.write('\n')
+    Res.close()
 
-print('Number of steps = ', NSteps)
-print('Zeta = ', Zeta)
-print('Noize parameter = ', Noize)
-print('Nu0 = ', Nu0, '\n')
+    for t in range(NSteps):
+
+        Nu = Nu0*(1 - math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
+        fgen = (np.random.normal() for i in range(n))
+        f = np.fromiter(fgen, float) * Noize
+        
+        x += Nu * x +  Zeta * x.dot(J) + f
+
+        for i in range(n):     # can I get rid of such direct elementwise checking?
+            if x[i] > 1:
+                x[i] = 1
+            elif x[i] < -1:
+                x[i] = -1
+
+
+    for i in range(n):
+        if x[i] < 0:
+            x[i] = -1
+        else:
+            x[i] = 1
+    return x
+
+    
+def MaxCut(G):
+     return SimCIM(G.J, G.x, G.n)
+
+def MinCut(G, Ab = 1):
+    return SimCIM(-G.J + G.V * Ab , G.x, G.n)
+    
+
+
+
+
+
 
 
 Res = open('./Results/Results.txt', 'a')
-Res.write('================================================================ \n')
-Res.write('Number of steps = ' + str(NSteps) + '\n')
-Res.write('Zeta = ' + str(Zeta) + '\n')
-Res.write('Noize parameter = ' + str(Noize) + '\n')
-Res.write('Nu0 = ' + str(Nu0) + '\n')
 
-Res.write('\n')
 
 
 FileNames = []   
@@ -94,72 +158,35 @@ for FileName in FileNames:
 
     Gr = MyGraph()
     Gr.Upload(FileName)
-    
 
-    J = Gr.J
-    n = Gr.n
-    m = Gr.m
-                
-    x = np.zeros(n)
+
 
     print('Source file: ', FileName)
-    print('Number of vertices = ', n)
+    print('Number of vertices = ', Gr.n)
     print('Work started')
     Res.write('Source file: ' + FileName + '\n')
-    Res.write('Number of vertices: ' + str(n) + '\n')
+    Res.write('Number of vertices: ' + str(Gr.n) + '\n')
     
 
 
     time3 = time.time()
     
-
-    for t in range(NSteps):
-
-        Nu = Nu0*(1 - math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
-
-        #print(Nu)
-
-        fgen = (np.random.normal() for i in range(n))
-        f = np.fromiter(fgen, float) * Noize
-        
-
-        if MaxCut == True:
-            Displacement = x.dot(J)
-        else:
-            Displacement = x.dot(- J + 20 / n * Ab)
-
-
-        
-        x += Nu * x +  Zeta * Displacement + f
+    x = MinCut(Gr)
 
 
 
-        for i in range(n):     # can I get rid of such direct elementwise checking?
-            if x[i] > 1:
-                x[i] = 1
-            elif x[i] < -1:
-                x[i] = -1
-
-
-    for i in range(n):
-        if x[i] < 0:
-            x[i] = -1
-        else:
-            x[i] = 1
-
-    
-
-    Jnew = copy.deepcopy(J)
+    Jnew = copy.deepcopy(Gr.J)
     for i in range(len(x)):
         for j in range(i):
             if x[i] != x[j]:
                 Jnew[i][j] = 0
                 Jnew[j][i] = 0
     
+    
     Cut = 0.0
-    for i in range(n):
+    for i in range(Gr.n):
         for j in range(i):
-           Cut += J[i][j] * (1 - x[i] * x[j])
+           Cut += Gr.J[i][j] * (1 - x[i] * x[j])
     Cut = Cut * 0.5
 
 
@@ -176,8 +203,8 @@ for FileName in FileNames:
     
     print('Cut Value =', Cut)
     
-    print('Balance value (0.5 is perfect) ', round(PlusClusterPower/n, 2))
-    Res.write('Balance value (0.5 is perfect) ' + str(round(PlusClusterPower/n, 2)) + '\n')
+    print('Balance value (0.5 is perfect) ', round(PlusClusterPower/Gr.n, 2))
+    Res.write('Balance value (0.5 is perfect) ' + str(round(PlusClusterPower/Gr.n, 2)) + '\n')
     
     print('Time spent: ', round(time4 - time3, 6), ' seconds \n')
 
@@ -189,38 +216,9 @@ for FileName in FileNames:
     
 
 
-    if n < 201: # Draw images for small graph
-
-        Colors = []
-        for i in x:
-            if i == -1:
-                Colors.append('red')
-            elif i == 1:
-                Colors.append('green')
-            else:
-                Colors.append('blue')
-
-        SourceImageName = './Images/' + FileName[7:-4] + '_Original' + '.png'
-        GSource = nx.Graph(np.matrix(J))
-        plt.figure(figsize = (n // 3 + 5, n // 3 + 5))
-        nx.draw(GSource, pos = nx.circular_layout(GSource), with_labels=True)
-        plt.savefig(SourceImageName)
-        plt.clf()
-
-                
+    if Gr.n < 201: # Draw images for small graph
+        Gr.Draw(FileName)
         
-
-        if MaxCut == True:
-            ResultImageName = './Images/' + FileName[7:-4] + '_Result' + '.png'
-        else:
-            ResultImageName = './Images/' + FileName[7:-4] + '_Result_MinCut' + '.png'
-        GResult = nx.Graph(np.matrix(Jnew))
-        nx.draw(GResult, pos = nx.spring_layout(GResult), node_color = Colors, with_labels=True)
-        plt.savefig(ResultImageName)
-        plt.clf()
-
-        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Original' + '.gexf')
-        nx.write_gexf(GSource, './Results/' + FileName[7:-4] + '_Result' + '.gexf')
         
         
 
