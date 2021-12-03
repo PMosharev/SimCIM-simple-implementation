@@ -7,7 +7,7 @@ import random
 import time
 import copy
 
-# implementation of SimCIM algorythm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
+# implementation of SimCIM algorithm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
 
 
             
@@ -39,7 +39,8 @@ def OutputResults(G, n):
 
     Cut = 0.0    
     for i in G.edges():
-        Cut += 1 - G.nodes[i[0]]["spin"] * G.nodes[i[1]]["spin"]
+        Cut += (1 - G.nodes[i[0]]["spin"] * G.nodes[i[1]]["spin"]) * G.edges[i]["weight"]
+    Cut *= 0.5
 
     print('Cut Value =', Cut)
 
@@ -51,9 +52,9 @@ def OutputResults(G, n):
         SumOfWeights += i[1]["weight"]
         if i[1]["spin"] == 1:
             PlusClusterPower += i[1]["weight"]
-    BalanceValue = PlusClusterPower/SumOfWeights
+    BalanceValue = PlusClusterPower/SumOfWeights                
         
-    print('Balance value (0.5 is perfect) ', round(BalanceValue, 2))
+    print('Balance value (0.5 corresponds to equal parts) ', round(BalanceValue, 2))
 
     print('\n \n')
 
@@ -87,29 +88,32 @@ def OutputResults(G, n):
         plt.savefig(SourceImageName)
         plt.clf()              
         
-        nx.write_gexf(G, './Results/' + FileName[7:-4] + '.gexf')
+        nx.write_gexf(G, './Results/' + FileName[7:-4] + '.gexf')   # save resulting graph with added spins of vertices and zero weights of cutted edges
 
 
 def ListOfFiles():
     FileNames = []   
 
     # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
-    NumberOfFiles = 6
-    for i in range(NumberOfFiles):
-        FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
+##    NumberOfFiles = 6
+##    for i in range(NumberOfFiles):
+##        FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
 
 
     ##FileNames.append('./Data/G1.txt')
     ##FileNames.append('./Data/G2.txt')
     ##FileNames.append('./Data/G7.txt')
     ##FileNames.append('./Data/G22.txt')
-    #FileNames.append('./Data/G39.txt')
+    ##FileNames.append('./Data/G39.txt')
 
 
 
-    #FileNames.append('./Data/SyntheticGraph1.txt')
-    #FileNames.append('./Data/SyntheticGraph2.txt')
-    #FileNames.append('./Data/SyntheticGraph3.txt')
+    FileNames.append('./Data/SyntheticGraph1.txt')
+    FileNames.append('./Data/SyntheticGraph2.txt')
+    FileNames.append('./Data/SyntheticGraph3.txt')
+    FileNames.append('./Data/SyntheticGraph4.txt')
+    FileNames.append('./Data/SyntheticGraph5.txt')
+    FileNames.append('./Data/SyntheticGraph6.txt')
 
     #FileNames.append('./Data/SimpleWeightedGraph.txt')
 
@@ -119,31 +123,31 @@ def ListOfFiles():
 
 
 
-def SimCIM(J,n, NSteps = 1000, Nu0 = -0.5, Zeta = -0.05, Noize = 0.005):
+def SimCIM(J,n, Params):
 
-    print('Number of steps = ', NSteps)
-    print('Zeta = ', Zeta)
-    print('Noize parameter = ', Noize)
-    print('Nu0 = ', Nu0, '\n')
+    NSteps = Params[0]
+    Nu0 = Params[1]
+    Zeta = Params[2]
+    Noize = Params[3]
 
     
     x = np.zeros(n)
 
     for t in range(NSteps):
 
-        Nu = Nu0*(1 - math.tanh(t / NSteps * 6 - 3))     # pump-loss factor, Fig2 (b) in the article
-        fgen = (np.random.normal() for i in range(n))
+        Nu = Nu0*(1 - math.tanh(t / NSteps * 6 - 3))        # pump-loss factor, Fig2 (b) in the article
+        fgen = (np.random.normal() for i in range(n))       # Generating vector of noize values for this iteration
         f = np.fromiter(fgen, float) * Noize
         
-        x += Nu * x +  Zeta * np.dot(J.A, x) + f
+        x += Nu * x +  Zeta * np.dot(J.A, x) + f            # Equation (5) in Tiunov`s aritcle
 
-        for i in range(n):     
+        for i in range(n):              # Equation (6) in Tiunov`s article
             if x[i] > 1:
                 x[i] = 1
             elif x[i] < -1:
                 x[i] = -1
 
-    for i in range(n):
+    for i in range(n):                  # After finish of algorithm, we define all positive spins to be 1 and negative to be -1
         if x[i] < 0:
             x[i] = -1
         else:
@@ -151,10 +155,10 @@ def SimCIM(J,n, NSteps = 1000, Nu0 = -0.5, Zeta = -0.05, Noize = 0.005):
     return x
 
     
-def MaxCut(G, n):    
+def MaxCut(G, n, Params):    
     J = nx.adjacency_matrix(G)
     
-    x = SimCIM(J, n)
+    x = SimCIM(J, n, Params)
     
     for i in range(n):
         G.nodes[i]["spin"] = x[i]
@@ -162,12 +166,12 @@ def MaxCut(G, n):
     return G
 
 
-def MinCut(G, n, Ab = 20):
-    print('Ab = ', Ab)
+def MinCut(G, n, Params):
+    Ab = Params[4]
     J = nx.adjacency_matrix(G)
     V = np.array([i[1] for i in G.nodes(data = "weight")])
     
-    x = SimCIM(- J + V * Ab / n , n)
+    x = SimCIM(- J + V * Ab / n , n, Params)                # Minimal Balanced Cut is the same Ising problem, but with different interaction matrix
     
     for i in range(n):
         G.nodes[i]["spin"] = x[i]
@@ -176,8 +180,20 @@ def MinCut(G, n, Ab = 20):
 
 
 
+NSteps = 1000
+Nu0 = -5
+Zeta = -0.05
+Noize = 0.005
+Ab = 10
+
+print('Number of steps = ', NSteps)
+print('Zeta = ', Zeta)
+print('Noize parameter = ', Noize)
+print('Nu0 = ', Nu0)
+print('Ab = ', Ab, '\n')
 
 
+Params = [NSteps, Nu0, Zeta, Noize, Ab]
 
 
 
@@ -193,7 +209,7 @@ for FileName in ListOfFiles():
 
     time3 = time.time()
     
-    G = MinCut(G,n)
+    G = MinCut(G,n, Params)
 
     time4 = time.time()
 
