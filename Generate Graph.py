@@ -1,7 +1,8 @@
 import numpy as np
 import os
 
-NGraphs = 10
+
+Weighted = True
 
 n = int(input('Введите число вершин графа ') or '200')
 
@@ -23,13 +24,24 @@ for i in range(1, n+1):
     for j in range(k):
         k2 = np.random.randint(1,n)
         if k2 != i:
-            GraphFile.write(str(i) + ' ' + str(k2) + ' 1\n')
+            if Weighted:
+                GraphFile.write(str(i) + ' ' + str(k2) + ' ' + str(1) + '\n')
+            else:
+                GraphFile.write(str(i) + ' ' + str(k2) + ' 1\n')
             NumberOfEdges += 1
+
+if Weighted:
+    for i in range(n-1):
+        GraphFile.write(str(i) + ' ' + str(1) + '\n')
+    GraphFile.write(str(n-1) + ' ' + str(30) + '\n')
+        
     
 GraphFile.close()
 
-
-ResultingFileName = './Data/SyntheticGraph' + str(iGraph) + '.txt'
+if Weighted:
+    ResultingFileName = './Data/WeightedSyntheticGraph' + str(iGraph) + '.txt'
+else:
+    ResultingFileName = './Data/5SyntheticGraph' + str(iGraph) + '.txt'
 
 FileResult = open(ResultingFileName, 'w')
 FileResult.write(str(n) + ' ' + str(NumberOfEdges) + '\n')

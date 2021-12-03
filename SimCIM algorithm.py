@@ -7,7 +7,7 @@ import random
 import time
 import copy
 
-# implementation of SimCIM algorithm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
+
 
 
             
@@ -81,11 +81,13 @@ def OutputResults(G, n):
 
         FileName = G.graph["FileName"]
 
-        SourceImageName = './Images/' + FileName[7:-4] + '.png'
+        ImageName = './Images/' + FileName[7:-4] + '.png'
+
+        #labels = {n: str(n) + '\nweight=' + str(G.nodes[n]['weight']) if 'weight' in G.nodes[n] else str(n) for n in G.nodes }
         
         plt.figure(figsize = (n // 3 + 5, n // 3 + 5))
         nx.draw(G, pos = nx.spring_layout(G), node_color = NodeColors, edge_color = EdgeColors, with_labels=True)
-        plt.savefig(SourceImageName)
+        plt.savefig(ImageName)
         plt.clf()              
         
         nx.write_gexf(G, './Results/' + FileName[7:-4] + '.gexf')   # save resulting graph with added spins of vertices and zero weights of cutted edges
@@ -94,7 +96,7 @@ def OutputResults(G, n):
 def ListOfFiles():
     FileNames = []   
 
-    # Uncomment this to try program on small graphs. (Set Noize = 0.000005 for better results in this case)
+
 ##    NumberOfFiles = 6
 ##    for i in range(NumberOfFiles):
 ##        FileNames.append('./Data/SimpleGraph' + str(i+1) + '.txt')
@@ -112,16 +114,22 @@ def ListOfFiles():
     FileNames.append('./Data/SyntheticGraph2.txt')
     FileNames.append('./Data/SyntheticGraph3.txt')
     FileNames.append('./Data/SyntheticGraph4.txt')
-    FileNames.append('./Data/SyntheticGraph5.txt')
-    FileNames.append('./Data/SyntheticGraph6.txt')
+##    FileNames.append('./Data/SyntheticGraph5.txt')
+##    FileNames.append('./Data/SyntheticGraph6.txt')
 
     #FileNames.append('./Data/SimpleWeightedGraph.txt')
+
+
+##    FileNames.append('./Data/WeightedSyntheticGraph1.txt')
+##    FileNames.append('./Data/WeightedSyntheticGraph2.txt')
+    #FileNames.append('./Data/WeightedSyntheticGraph3.txt')
 
     return FileNames
 
 
 
 
+# implementation of SimCIM algorithm from article https://arxiv.org/pdf/1901.08927.pdf (by Tiunov et. al)
 
 def SimCIM(J,n, Params):
 
@@ -181,7 +189,7 @@ def MinCut(G, n, Params):
 
 
 NSteps = 1000
-Nu0 = -5
+Nu0 = -4
 Zeta = -0.05
 Noize = 0.005
 Ab = 10
@@ -203,7 +211,7 @@ for FileName in ListOfFiles():
     print('Source file: ', FileName)
 
     
-    n, G = UploadGraph(FileName)
+    n, G = UploadGraph(FileName, False)  # change second parameter to True, if you have weighted graph in a file
     
     print('Number of vertices = ', n)
 
